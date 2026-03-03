@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -124,12 +125,12 @@ export default function Login() {
         <div className="mt-6 text-center">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             没有账号？
-            <a
+            <Link
               href="/auth/register"
               className="ml-1 text-blue-600 dark:text-blue-400 hover:underline"
             >
               注册
-            </a>
+            </Link>
           </p>
         </div>
       </main>

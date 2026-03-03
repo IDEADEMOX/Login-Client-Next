@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios";
+import Link from "next/link";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -26,7 +28,7 @@ export default function Register() {
 
     // 客户端验证
     if (
-      !formData.name ||
+      !formData.username ||
       !formData.email ||
       !formData.password ||
       !formData.confirmPassword
@@ -46,24 +48,26 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const { confirmPassword, ...registerData } = formData;
+      const res = await axios({
         method: "POST",
+        url: "http://localhost:3001/api/register",
+        data: registerData,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const data = await res.data;
 
-      if (!response.ok) {
+      if (res.status !== 200) {
         throw new Error(data.error || "注册失败");
       }
 
       setSuccess("注册成功，请登录");
       // 重置表单
       setFormData({
-        name: "",
+        username: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -95,16 +99,16 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              htmlFor="name"
+              htmlFor="username"
               className="block mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               姓名
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800 dark:text-white"
               required
@@ -176,12 +180,12 @@ export default function Register() {
         <div className="mt-6 text-center">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             已有账号？
-            <a
+            <Link
               href="/auth/login"
               className="ml-1 text-blue-600 dark:text-blue-400 hover:underline"
             >
               登录
-            </a>
+            </Link>
           </p>
         </div>
       </main>
