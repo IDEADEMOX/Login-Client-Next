@@ -19,7 +19,7 @@ export default function Navbar() {
         if (typeof window === "undefined") return;
 
         const userStr = getStorage("user");
-        if (!userStr) {
+        if (!userStr && pathname !== "/auth/register") {
           // 只在需要保护的页面才跳转（避免登录页也跳）
           router.push("/auth/login");
           setUserInfo(null);
